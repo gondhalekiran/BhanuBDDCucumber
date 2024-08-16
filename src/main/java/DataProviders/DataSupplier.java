@@ -10,10 +10,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.annotations.DataProvider;
 
 public class DataSupplier {
-	private static int startRow = 1; // positive mandatory 1-2, DataType 3-7,
-	private static int endRow = 1; // Length 8-11, Number 12-13
 	String filepath = ".\\TestData\\BEExcel.xlsx";
-	static String sheetName;
+	private static int startRow, endRow ; 
+	private static String sheetName;
 
 	public static void setSheetName(String shtName, int sr, int er) {
 		sheetName = shtName;
@@ -70,9 +69,6 @@ public class DataSupplier {
 			}
 			System.out.println();
 		}
-//		for (String[] s1 : data) {
-//			System.out.println(Arrays.toString(s1));
-//		}
 		Workbook.close();
 		file.close();
 		return data;

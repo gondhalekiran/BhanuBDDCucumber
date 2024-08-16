@@ -1,6 +1,8 @@
 package Com.BhanuEmbroideries.Pages.Users;
 
 import java.io.IOException;
+import java.sql.Driver;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,12 +14,18 @@ import org.openqa.selenium.support.PageFactory;
 import Actions.AllAction;
 import Com.BhanuEmbroideries.LibraryFiles.UtilityClass;
 
-public class BECreateAdminUserPage {
+public class BEUserManagementPage {
 	// Step1: Variable declaration
 	@FindBy(xpath = "//button[@aria-label='Add user']")
 	private WebElement addUserBtn;
-	@FindBy(xpath = "//input[@name='name']")
-	private WebElement nameInp;
+	@FindBy(xpath = "//input[@aria-label='Search user']")
+	private WebElement searchInpBtn;
+	@FindBy(xpath = "//td[2]")
+	private List <WebElement> nameColLst;
+	@FindBy(xpath = "(//tr[1])[2]")
+	private List <WebElement> rowEleLst;
+	
+	
 	@FindBy(xpath = "//div[@role='button']")
 	private WebElement roleSel;
 	@FindBy(xpath = "//input[@name='email']")
@@ -34,32 +42,28 @@ public class BECreateAdminUserPage {
 	Actions act;
 
 	// Step2: Variable initialization
-	public BECreateAdminUserPage(WebDriver driver) {
+	public BEUserManagementPage(WebDriver driver) {
 		PageFactory.initElements(driver, this); // diffClassName.methodName(webdriverObject, this->Keyword);
 		this.act = new Actions(driver);
 	}
 
 	// Step3: Variable usage
 	
-	public void inpBECreateAdminUsersPageName(String name) {
-		nameInp.sendKeys(name);
+	public void inpBEUserManagementPageSearch(String name) {
+		searchInpBtn.sendKeys(name);
 	}
-	public void selBECreateAdminUsersPageRole(WebDriver driver ,String role) throws IOException {
-		roleSel.click();
-		WebElement wb = driver.findElement(By.xpath("//div[text()='"+role+"']"));
-		wb.click();
+	public void clickBEUserManagementPageViewUserBtn(WebDriver driver, String name) {
+		driver.findElement(By.xpath("//td[text()='"+name+"']/parent::tr/td[6]/button[1]")).click();
 	}
-	public void inpBECreateAdminUsersPageEmail(String email) {
-		emailInp.sendKeys(email);
+	public void clickBEUserManagementPageEditUserBtn(WebDriver driver, String name) {
+		driver.findElement(By.xpath("//td[text()='"+name+"']/parent::tr/td[6]/button[2]")).click();
 	}
-	public void inpBECreateAdminUsersPagePassword(String password) {
-		pWDInp.sendKeys(password);
+	public void clickBEUserManagementPageDeleteUserBtn(WebDriver driver, String name) {
+		driver.findElement(By.xpath("//td[text()='"+name+"']/parent::tr/td[6]/button[3]")).click();
 	}
-	public void inpBECreateAdminUsersPageMobile(String mob) {
-		mobInp.sendKeys(mob);
-	}
-
-	public void clickBEUsersPageAddUsersBtn() {
+	
+	
+	public void clickBEUserManagementPageAddUsersBtn() {
 		addUserBtn.click();
 	}
 	public void clickBEUsersPageCancelBtn() {
@@ -68,5 +72,7 @@ public class BECreateAdminUserPage {
 	public void clickBEUsersPageSubmitBtn() {
 		submitBtn.click();
 	}
+
+	
 	
 }

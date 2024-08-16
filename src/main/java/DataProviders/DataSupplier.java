@@ -10,21 +10,31 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.annotations.DataProvider;
 
 public class DataSupplier {
-	int startRow = 1; // positive mandatory 1-2, DataType 3-7,
-	int endRow = 1; // Length 8-11, Number 12-13
-	String filepath = ".\\TestData\\SolarLadderExcel.xlsx";
+	private static int startRow = 1; // positive mandatory 1-2, DataType 3-7,
+	private static int endRow = 1; // Length 8-11, Number 12-13
+	String filepath = ".\\TestData\\BEExcel.xlsx";
+	static String sheetName;
 
-	@DataProvider(name = "dataContainer1")
-	// @Test
-	public String[][] excelDataSupplier() throws IOException {
+	public static void setSheetName(String shtName, int sr, int er) {
+		sheetName = shtName;
+		startRow = sr;
+		endRow = er;
+	}
+
+	@DataProvider(name = "dataContainer")
+	public String[][] getExcelData() throws IOException {
+		return getSelectiveExcelData();
+	}
+
+	public String[][] getSelectiveExcelData() throws IOException {
 		FileInputStream file = new FileInputStream(filepath);
 		XSSFWorkbook Workbook = new XSSFWorkbook(file);
-		XSSFSheet sheet = Workbook.getSheet("Unit");
+		XSSFSheet sheet = Workbook.getSheet(sheetName);
 		int row = endRow - startRow + 1;
-        //int row= sheet.getPhysicalNumberOfRows();
-        //System.out.println(row);
+		// int row= sheet.getPhysicalNumberOfRows();
+		// System.out.println(row);
 		int col = sheet.getRow(0).getLastCellNum();
-        //System.out.println(col);
+		// System.out.println(col);
 		String[][] data = new String[row][col];
 		for (int i = 0; i < row; i++) {
 			for (int j = 0; j < col; j++) {
@@ -43,11 +53,10 @@ public class DataSupplier {
 		return data;
 	}
 
-	@DataProvider(name = "dataContainer")
-	public String[][] excelDS() throws IOException {
+	public String[][] getAllExcelData() throws IOException {
 		FileInputStream file = new FileInputStream(filepath);
 		XSSFWorkbook Workbook = new XSSFWorkbook(file);
-		XSSFSheet sheet = Workbook.getSheet("Integration");
+		XSSFSheet sheet = Workbook.getSheet(sheetName);
 
 		int row = sheet.getPhysicalNumberOfRows();
 		// System.out.println(row);

@@ -12,7 +12,7 @@ import org.openqa.selenium.support.PageFactory;
 import Actions.AllAction;
 import Com.BhanuEmbroideries.LibraryFiles.UtilityClass;
 
-public class BECreateAdminUserPage {
+public class BEViewUserPage {
 	// Step1: Variable declaration
 	@FindBy(xpath = "//button[@aria-label='Add user']")
 	private WebElement addUserBtn;
@@ -34,7 +34,7 @@ public class BECreateAdminUserPage {
 	Actions act;
 
 	// Step2: Variable initialization
-	public BECreateAdminUserPage(WebDriver driver) {
+	public BEViewUserPage(WebDriver driver) {
 		PageFactory.initElements(driver, this); // diffClassName.methodName(webdriverObject, this->Keyword);
 		this.act = new Actions(driver);
 	}

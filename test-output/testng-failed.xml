@@ -7,7 +7,7 @@
         <methods>
           <include name="closeBrowser"/>
           <include name="logoutFromApp"/>
-          <include name="SubmitEnquiryForm"/>
+          <include name="SubmitEnquiryForm" invocation-numbers="0"/>
           <include name="loginToApp"/>
           <include name="openBrowser"/>
         </methods>

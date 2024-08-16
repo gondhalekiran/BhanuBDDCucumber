@@ -2,7 +2,6 @@ package com.bhanuEmbroideries.qa.test.login;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -28,18 +27,22 @@ import Com.BhanuEmbroideries.Pages.Users.BEUserManagementPage;
 import DataProviders.DataSupplier;
 import net.bytebuddy.utility.RandomString;
 
-public class BELoginUnitTC extends BaseClass {
+public class LoginTC extends BaseClass {
 	BELoginPage login;
 	BESideMenubar sm;
 	BEUserManagementPage um;
 	BECreateAdminUserPage cau;
 	String TCID;
 	SoftAssert soft;
-	Logger log = LogManager.getLogger(BELoginUnitTC.class);
+	Logger log = LogManager.getLogger(LoginTC.class);
 	ExtentReports extent;
+	public String sheetName;
 
 	@BeforeClass
 	public void openBrowser() throws EncryptedDocumentException, IOException {
+		sheetName = "Unit";
+		DataSupplier.setSheetName(sheetName, 1, 1);
+
 		initializeBrowser();
 		login = new BELoginPage(driver);
 		sm = new BESideMenubar(driver);
@@ -54,6 +57,20 @@ public class BELoginUnitTC extends BaseClass {
 	public void loginToApp() throws InterruptedException, IOException {
 		// for reset soft object for each itertion of @Test
 		soft = new SoftAssert();
+		sm.clickBESideMenubarUsersBtn();
+
+	}
+
+	@Test(enabled = true, priority = 1, groups = "Unit", dataProvider = "dataContainer", dataProviderClass = DataSupplier.class)
+	public void loginTest(String Scenario, String error, String eMail, String password, String toastMsg)
+			throws IOException, InterruptedException {
+
+		extent.createTest("SubmitEnquiryForm").log(Status.PASS,
+				"This is a logging event for MyFirstTest, and it passed!");
+
+		TCID = RandomString.make(2); // ab cd a1 a5 s4
+		// AddProject page method call
+		log.info("Filling Form");
 		// Login page method call
 		log.info("Signing In..");
 		login.inpBELoginPageEmail(UtilityClass.getPFData("UN"));
@@ -62,57 +79,51 @@ public class BELoginUnitTC extends BaseClass {
 		login.clickBELoginPageLoginBtn();
 		log.info("Login succcess");
 		Thread.sleep(200);
-		sm.clickBESideMenubarUsersBtn();
-
-	}
-
-	@Test(enabled = true, priority = 1, dataProvider = "dataContainer", dataProviderClass = DataSupplier.class)
-	public void submitEnquiryFormTest(String Scenario, String error, String name, String userType, String eMail,
-			String password, String mobNo, String toastMsg) throws IOException, InterruptedException {
-
-		extent.createTest("SubmitEnquiryForm").log(Status.PASS,
-				"This is a logging event for MyFirstTest, and it passed!");
-
-		TCID = RandomString.make(2); // ab cd a1 a5 s4
-		// AddProject page method call
-		log.info("Filling Form");
-		um.clickBEUserManagementPageAddUsersBtn();
-		cau.inpBECreateAdminUsersPageName(name);
-		cau.selBECreateAdminUsersPageRole(driver, userType);
-		cau.inpBECreateAdminUsersPageEmail(eMail);
-		cau.inpBECreateAdminUsersPagePassword(password);
-		cau.inpBECreateAdminUsersPageMobile(mobNo);
-		Thread.sleep(5000);
-		cau.clickBEUsersPageSubmitBtn();
-		um.inpBEUserManagementPageSearch(name);
-		um.clickBEUserManagementPageViewUserBtn(driver, name);
+		getToastMsg(Scenario);
 
 		soft.assertAll();
 	}
 
 	@AfterMethod
 	public void logoutFromApp(ITestResult s1, Method m) throws IOException, InterruptedException {
-		 // Get the current date and time
-        LocalDateTime date = LocalDateTime.now();
-        
-        // Define the format pattern
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HHmmss");
-        
-        // Format the date
-        String formattedDate = date.format(formatter);
-        
-        // Output the formatted date
-        System.out.println("Formatted Date: " + formattedDate);
-    
+		// Get the current date and time
+		LocalDateTime date = LocalDateTime.now();
+
+		// Define the format pattern
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HHmmss");
+
+		// Format the date
+		String formattedDate = date.format(formatter);
+
+		// Output the formatted date
+		System.out.println("Formatted Date: " + formattedDate);
+
 		if (s1.getStatus() == ITestResult.FAILURE) {
 			Thread.sleep(5000);
-			UtilityClass.captureSS(driver, m.getName() + formattedDate+TCID); // code to capture SS
+			UtilityClass.captureSS(driver, TCID + m.getName() + formattedDate); // code to capture SS
 		}
-		
+
 	}
 
 	@AfterClass
 	public void closeBrowser() {
 		// driver.close();
+	}
+
+	public void getToastMsg(String scen) {
+		switch (scen) {
+		case "BothTrue":
+			scen = "SignIn Success";
+			break;
+		case "Both False":
+		case "False Email":
+			scen = "Email is not Registered";
+			break;
+		case "False Pwd":
+			scen = "Invalid Password";
+			break;
+		default:
+			break;
+		}
 	}
 }
